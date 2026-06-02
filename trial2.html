@@ -2,127 +2,380 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>A Special Message for You! ❤️</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
+            --pink-light: #ffb3c6;
             --pink-primary: #ff85a2;
             --pink-dark: #ff4d6d;
+            --pink-neon: #ff0055;
             --gold: #ffd700;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent; /* Removes blue tap highlight on iOS */
         }
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-image: url('https://i.pinimg.com/originals/31/32/30/313230985c57508670736127163f458e.gif');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            background: linear-gradient(135deg, #ffe5ec, #ffb3c6, #ff758f, #ff4d6d);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
+            /* Handles modern iOS viewport edge bars nicely */
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
             overflow: hidden;
             text-align: center;
+            position: relative;
         }
 
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- Floating Hearts Background --- */
+        .heart-particle {
+            position: absolute;
+            color: rgba(255, 77, 109, 0.6);
+            pointer-events: none;
+            font-size: var(--size);
+            left: var(--left);
+            bottom: -50px;
+            animation: floatUp var(--speed) linear infinite;
+            z-index: 1;
+            text-shadow: 0 0 10px rgba(255, 133, 162, 0.4);
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% {
+                transform: translateY(-110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* --- Glassmorphism Container --- */
         .container {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 2.5rem;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 2.5rem 1.8rem;
             border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.2);
-            border: 2px solid white;
-            width: 85%;
-            max-width: 450px;
+            box-shadow: 0 20px 40px rgba(255, 77, 109, 0.25),
+                        inset 0 0 0 2px rgba(255, 255, 255, 0.4);
+            width: 88%;
+            max-width: 400px; /* Perfectly scales across all iPhone variants */
             position: relative;
             z-index: 10;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 1;
+            transform: scale(1);
         }
 
-        h1 { color: var(--pink-dark); font-size: 1.6rem; margin-bottom: 10px; }
+        .hidden {
+            display: none !important;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        /* --- Typography & Animations --- */
+        h1 {
+            color: #fff;
+            font-size: 1.7rem;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 4px rgba(255, 77, 109, 0.4);
+        }
+
+        p {
+            color: #fff;
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            font-weight: 400;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        b {
+            color: #fff;
+            background: rgba(255, 77, 109, 0.3);
+            padding: 2px 8px;
+            border-radius: 8px;
+        }
         
         .bday-text {
             font-family: 'Dancing Script', cursive;
-            font-size: 3rem !important;
-            color: #ff0055;
-            text-shadow: 2px 2px 10px rgba(255, 0, 85, 0.3);
+            font-size: 2.8rem !important;
+            color: #fff;
+            text-shadow: 0 0 10px var(--pink-neon), 0 0 20px var(--pink-dark);
             animation: glow 1.5s ease-in-out infinite alternate;
         }
 
         @keyframes glow {
-            from { text-shadow: 0 0 10px #fff, 0 0 20px #ff85a2; }
-            to { text-shadow: 0 0 20px #fff, 0 0 30px #ff4d6d; }
+            from { text-shadow: 0 0 10px #fff, 0 0 20px var(--pink-primary), 0 0 30px var(--pink-neon); }
+            to { text-shadow: 0 0 20px #fff, 0 0 30px var(--pink-dark), 0 0 40px var(--pink-neon); }
         }
 
-        .hidden { display: none; }
+        /* --- Premium First Impression Badging --- */
+        .welcome-badge {
+            position: relative;
+            width: 85px;
+            height: 85px;
+            margin: 0 auto 20px auto;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(255, 77, 109, 0.2);
+        }
 
+        .badge-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--pink-neon);
+            filter: blur(15px);
+            opacity: 0.3;
+            z-index: -1;
+            animation: pulseGlow 2s infinite alternate;
+        }
+
+        .badge-icon {
+            font-size: 2.5rem;
+            animation: heartFloat 2.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            from { transform: scale(0.95); opacity: 0.2; }
+            to { transform: scale(1.15); opacity: 0.4; }
+        }
+
+        @keyframes heartFloat {
+            0% { transform: translateY(3px) scale(0.95); }
+            100% { transform: translateY(-5px) scale(1.05); }
+        }
+
+        /* Interactive Mailbox Badge */
+        .mailbox-badge {
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.35);
+            border: 2px solid #fff;
+            animation: mailboxPulse 1.5s infinite alternate ease-in-out;
+            transition: all 0.3s ease;
+        }
+        .mailbox-badge:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.5);
+        }
+        @keyframes mailboxPulse {
+            from { transform: scale(1); box-shadow: 0 10px 20px rgba(255, 77, 109, 0.3); }
+            to { transform: scale(1.06); box-shadow: 0 15px 30px rgba(255, 77, 109, 0.6), 0 0 15px #fff; }
+        }
+
+        /* Mailbox burst effect items */
+        .mailbox-heart {
+            position: absolute;
+            font-size: 2rem;
+            pointer-events: none;
+            z-index: 100;
+            animation: burstOut 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+        @keyframes burstOut {
+            0% { transform: translate(0, 0) scale(0.3); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(var(--scale)) rotate(var(--rot)); opacity: 0; }
+        }
+
+        /* Smooth Reveal Content Animation */
+        .delayed-content {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        .delayed-content.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Controls & Buttons --- */
         .btn {
-            background: var(--pink-primary);
+            background: linear-gradient(135deg, var(--pink-primary), var(--pink-dark));
             color: white;
             border: none;
-            padding: 12px 28px;
+            padding: 14px 28px;
             margin: 10px;
             border-radius: 50px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 133, 162, 0.3);
+            letter-spacing: 0.5px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 20px rgba(255, 77, 109, 0.4),
+                        inset 0 -4px 0 rgba(0,0,0,0.15);
         }
 
-        .btn:hover { background: var(--pink-dark); transform: scale(1.1); }
+        /* Primary Call-to-action Subtle Pulse */
+        .pulse-btn {
+            animation: buttonPulse 2s infinite ease-in-out;
+        }
 
-        #noBtn { position: absolute; transition: 0.3s ease; z-index: 100; }
+        @keyframes buttonPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); box-shadow: 0 12px 25px rgba(255, 77, 109, 0.6); }
+            100% { transform: scale(1); }
+        }
 
-        input {
-            padding: 12px;
-            border: 2px solid var(--pink-primary);
+        .btn:hover {
+            transform: translateY(-2px) scale(1.03);
+        }
+
+        .btn:active {
+            transform: translateY(1px) scale(0.98);
+        }
+
+        #noBtn {
+            position: absolute;
+            transition: all 0.25s ease;
+            z-index: 100;
+        }
+
+        input[type="text"] {
+            padding: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
             border-radius: 15px;
-            width: 80%;
-            margin-bottom: 15px;
+            width: 90%;
+            margin-bottom: 20px;
             outline: none;
             font-size: 1rem;
+            color: white;
+            text-align: center;
+            transition: all 0.3s ease;
         }
 
-        .slider { width: 80%; accent-color: var(--pink-dark); margin: 20px 0; }
+        input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
 
+        input[type="text"]:focus {
+            border-color: #fff;
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .slider {
+            width: 90%;
+            accent-color: var(--pink-dark);
+            margin: 25px 0;
+            background: rgba(255, 255, 255, 0.3);
+            height: 8px;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        /* --- Falling Food Elements --- */
         .falling-item {
             position: absolute;
-            top: -50px;
+            top: -60px;
             font-size: 2.5rem;
             animation: fall 3s linear forwards;
             pointer-events: none;
             z-index: 1000;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.15));
         }
 
-        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
+        }
 
-        .reveal-anim { animation: popIn 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
-        @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .big-emoji {
+            font-size: 4rem;
+            display: block;
+            margin: 12px 0;
+            animation: bounceEmoji 0.8s infinite alternate cubic-bezier(0.455, 0.03, 0.515, 0.955);
+        }
 
-        .big-emoji { font-size: 4rem; display: block; margin: 10px 0; animation: bounceEmoji 1s infinite alternate; }
-        @keyframes bounceEmoji { from { transform: translateY(0); } to { transform: translateY(-10px); } }
+        @keyframes bounceEmoji {
+            from { transform: translateY(0) scale(1); }
+            to { transform: translateY(-12px) scale(1.05); }
+        }
+
+        .reveal-anim {
+            animation: popIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Small screen adjustments for iPhone SE / mini models */
+        @media (max-height: 680px) {
+            .container { padding: 1.8rem 1.4rem; }
+            h1 { font-size: 1.5rem; }
+            .bday-text { font-size: 2.3rem !important; }
+            .welcome-badge { width: 70px; height: 70px; margin-bottom: 12px; }
+            .badge-icon { font-size: 2rem; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Step 1 -->
-    <div id="step1" class="container">
-        <h1>Hey Handsome! ✨</h1>
+    <!-- Continuous Floating Hearts Background -->
+    <div id="heartsContainer"></div>
+
+    <!-- Step 1 (Enhanced Opening Frame) -->
+    <div id="step1" class="container reveal-anim">
+        <div class="welcome-badge">
+            <div class="badge-glow"></div>
+            <span class="badge-icon">💖</span>
+        </div>
+        <h1>Happy Morning ! ✨</h1>
         <p>Stop right there! I have a secret surprise for you... <br>Want to see it? 😉</p>
-        <button class="btn" onclick="nextStep(2)">Yes, please!</button>
-        <button id="noBtn" class="btn" onmouseover="moveNoButton()">No 😜</button>
+        <div style="position: relative; margin-top: 10px;">
+            <button class="btn pulse-btn" onclick="nextStep(2)">Yes, please!</button>
+            <button id="noBtn" class="btn" onmouseover="moveNoButton()" onclick="moveNoButton()">No 😜</button>
+        </div>
     </div>
 
-    <!-- Step 2 -->
+    <!-- Step 2 (Identity Check) -->
     <div id="step2" class="container hidden">
-        <h1>Identity Check! 🔒</h1>
+        <h1>Small Check! 🔒</h1>
         <p>Confirm the date to proceed: <br><b>What is the date today?</b></p>
         <input type="text" id="dateInput" placeholder="03-06-2026">
         <button class="btn" onclick="checkDate()">Verify Me</button>
+    </div>
+
+    <!-- Step 2b (New Emotional & stylized Gurkha Frame inserted smoothly) -->
+    <div id="step2b" class="container hidden" style="border: 2px solid rgba(255, 255, 255, 0.5); background: rgba(255, 117, 143, 0.3);">
+        <div class="welcome-badge" style="width: 75px; height: 75px; margin-bottom: 15px;">
+            <div class="badge-glow" style="background: var(--pink-primary)"></div>
+            <span class="badge-icon" style="font-size: 2rem;">💂‍♂️💞</span>
+        </div>
+        <h1>To Dear "Gurkha"...</h1>
+        <p>You have no idea how much I miss our <b>Gurkha duty</b> talks! 🥺</p>
+        <p style="font-size: 0.95rem; line-height: 1.6; font-weight: 300; text-shadow: 0 1px 3px rgba(0,0,0,0.15);">
+            That one week felt like a lifetime of happiness. Even though we had to pause, my heart is still stuck in those future dreams we shared. 🌈✨
+        </p>
+        <button class="btn pulse-btn" onclick="nextStep(3)" style="margin-top: 15px;">Tell Me More 💖🦋</button>
     </div>
 
     <!-- Step 3 -->
@@ -130,32 +383,51 @@
         <h1>Quick Question... 💖</h1>
         <p>How much do you like me today?</p>
         <input type="range" min="1" max="100" value="50" class="slider" id="loveSlider">
-        <p>Level: <span id="loveVal" style="font-weight: bold; color: var(--pink-dark);">50</span>%</p>
+        <p>Level: <span id="loveVal" style="font-weight: bold; color: var(--gold); font-size: 1.3rem; text-shadow: 0 0 5px rgba(0,0,0,0.2);">50</span>%</p>
         <button class="btn" onclick="checkLove()">Submit Love</button>
     </div>
 
-    <!-- Step 3b: NEW Emoji Question -->
-    <div id="step3b" class="container hidden">
-        <h1>Do you really like me? 🥰</h1>
-        <span class="big-emoji">🥳💖✨</span>
-        <p>I'm so happy to hear that!</p>
-        <button class="btn" onclick="nextStep(4)">Next 😍</button>
+    <!-- Step 3b -->
+    <div id="step3b" class="container hidden" style="border: 2px dashed rgba(255, 255, 255, 0.8); background: rgba(255, 133, 162, 0.35);">
+        <h1>Yei! Seriously?! 🥳🔥</h1>
+        <span class="big-emoji" onclick="clickBurst(event)" style="cursor: pointer; user-select: none;" title="Click me for a surprise!">🥰</span>
+        <p style="font-size: 1.1rem; font-weight: 600; text-shadow: 0 0 8px rgba(255,255,255,0.6);">
+            I'm flying on cloud nine right now! ☁️😉 ....
+        </p>
+        <button class="btn" onclick="nextStep(4)" style="background: linear-gradient(135deg, #fff, #ffe5ec); color: var(--pink-dark); box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);">
+            Next 😍
+        </button>
     </div>
 
     <!-- Step 4 -->
     <div id="step4" class="container hidden">
         <h1>Cravings Alert! 🤤</h1>
-        <p>I'm craving <b>Grill Chicken and Ice Cream</b>! <br>Would you treat me to some?</p>
+        <p>Last 20 days - I am on Strict diet 😔</p>
+        <p>So , I'm craving <b>Grill Chicken and Ice Cream</b>! <br>Would you treat me to some?</p>
         <button class="btn" onclick="startCravingsRain()">Yes, Let's go! 🍦</button>
     </div>
 
-    <!-- Step 5 -->
-    <div id="step5" class="container hidden reveal-anim" style="background: rgba(255, 255, 255, 0.95); border: 3px solid var(--pink-primary);">
-        <h1 class="bday-text">Happy Happy Birthday!</h1>
-        <p style="font-size: 1.2rem; font-weight: 600;">To my favorite person! ❤️</p>
-        <p>May your day be filled with endless smiles, love, and of course... lots of treats! 🎂✨</p>
-        <div style="font-size: 3rem; margin: 10px 0;">🎉🎂✨🎈</div>
-        <button class="btn" onclick="nextStep(6)" style="background: var(--gold); color: #333;">What's next? 😍</button>
+    <!-- Step 5 (Enhanced: Interactive Mailbox Box & Flying Hearts before Message) -->
+    <div id="step5" class="container hidden" style="border: 3px solid rgba(255, 255, 255, 0.6); min-height: 250px;">
+        <!-- Mailbox Trigger Section -->
+        <div id="mailboxIntro">
+            <h1>You've Got Mail! 📬</h1>
+            <p>Letter has arrived just for you. Click the below mailbox to open it <b>Mr.Pratheep ✨💖</b></p>
+            <div class="welcome-badge mailbox-badge" id="mailboxBox" onclick="openMailbox(event)">
+                <div class="badge-glow"></div>
+                <span class="badge-icon" id="mailboxIcon">📬Click It</span>
+            </div>
+        </div>
+
+        <!-- Hidden Birthday Message - Revealed Smoothly after dynamic actions -->
+        <div id="bdayActualMessage" class="delayed-content" style="display: none;">
+            <h1 class="bday-text">Happy Happy Birthday!</h1>
+            <p style="font-size: 1.1rem; font-weight: 600; margin-top: 10px;">To Dear "Gurkha"... 💂‍♂️💞</p>
+            
+            <p>In this entire generation, I've never met someone as special as you. You are pure magic! ✨💖</p>
+            <div style="font-size: 3rem; margin: 12px 0; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.15));">💖</div>
+            <button class="btn" onclick="nextStep(6)" style="background: linear-gradient(135deg, var(--gold), #ffcc00); color: #333; box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);">What's next? 😍</button>
+        </div>
     </div>
 
     <!-- Step 6 -->
@@ -168,9 +440,14 @@
 
     <!-- Step 7 -->
     <div id="step7" class="container hidden">
-        <h1>See you soon! ❤️</h1>
-        <p>Have the most amazing day ever, birthday boy! <br>Miss you loads! 👋✨</p>
-        <p style="font-size: 2rem;">🥰</p>
+        <h1>See You Soon! ❤️👋</h1>
+        
+        <p>I know you've already created distance between us and moved on. You once told me that you would definitely contact me when the good news happened. When it did happen and I never heard from you, 
+            that was when I understood where I stand in your life now.</p>
+        <p>But , You were the happiest part of my week, and I don't know if I'll ever find someone quite like you.</p>
+        <p>Miss you loads! 👋✨</p>
+        <p style="font-size: 1rem; font-weight: 600; ">Happy Birthday. Keep shining and keep smiling <br><b>Mr. Pratheep Selvaraj --> Gurkha! ..💎✨</b></p>
+        <p class="big-emoji" style="animation-duration: 0.5s;">🥰</p>
     </div>
 
     <script>
@@ -180,11 +457,47 @@
         
         slider.oninput = function() { output.innerHTML = this.value; }
 
+        // Continuous Floating Hearts System
+        function createBackgroundHearts() {
+            const container = document.getElementById('heartsContainer');
+            const heartTypes = ['❤️', '💖', '💝', '💕', '✨'];
+            
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'heart-particle';
+                heart.innerText = heartTypes[Math.floor(Math.random() * heartTypes.length)];
+                
+                heart.style.setProperty('--left', Math.random() * 100 + 'vw');
+                heart.style.setProperty('--size', (Math.random() * 1.2 + 0.8) + 'rem');
+                heart.style.setProperty('--speed', (Math.random() * 3 + 4) + 's');
+                
+                container.appendChild(heart);
+                
+                setTimeout(() => { heart.remove(); }, 7000);
+            }, 350);
+        }
+
+        window.onload = function() {
+            createBackgroundHearts();
+            
+            // Premium First-Frame Interaction Spark
+            confetti({
+                particleCount: 50,
+                spread: 60,
+                origin: { y: 0.6 },
+                colors: ['#ff85a2', '#ff4d6d', '#ffd700', '#ffffff']
+            });
+        };
+
         function moveNoButton() {
-            if (noMoveCount < 5) {
+            if (noMoveCount < 6) {
                 const btn = document.getElementById('noBtn');
-                btn.style.left = Math.random() * (window.innerWidth - 150) + 'px';
-                btn.style.top = Math.random() * (window.innerHeight - 100) + 'px';
+                const padding = 60; // Safer margins for restricted mobile widths
+                const newX = Math.random() * (window.innerWidth - padding * 2) + padding;
+                const newY = Math.random() * (window.innerHeight - padding * 2) + padding;
+                
+                btn.style.left = newX + 'px';
+                btn.style.top = newY + 'px';
                 noMoveCount++;
             } else {
                 document.getElementById('noBtn').style.display = "none";
@@ -192,14 +505,110 @@
         }
 
         function nextStep(step) {
-            document.querySelectorAll('.container').forEach(el => el.classList.add('hidden'));
-            document.getElementById('step' + step).classList.remove('hidden');
-            if(step === 5) triggerConfetti();
+            const currentActive = document.querySelector('.container:not(.hidden)');
+            if (currentActive) {
+                currentActive.classList.add('hidden');
+            }
+            
+            // Evaluates both numbers and string-based steps (like '3b' or '2b')
+            const nextTarget = document.getElementById('step' + step);
+            nextTarget.classList.remove('hidden');
+            nextTarget.classList.add('reveal-anim');
+            
+            if(step === '3b') {
+                confetti({ particleCount: 40, angle: 60, spread: 50, origin: { x: 0, y: 0.7 }, colors: ['#ff85a2', '#ff0055', '#ffd700'] });
+                confetti({ particleCount: 40, angle: 120, spread: 50, origin: { x: 1, y: 0.7 }, colors: ['#ff85a2', '#ff0055', '#ffd700'] });
+            }
+
+            // If entering Step 5, ensure mailbox is reset, and text hidden
+            if(step === 5) {
+                document.getElementById('mailboxIntro').style.display = "block";
+                document.getElementById('bdayActualMessage').style.display = "none";
+                document.getElementById('bdayActualMessage').classList.remove('show');
+                document.getElementById('mailboxIcon').innerText = "📬";
+            }
+        }
+
+        // Dedicated custom sequence to fly hearts from mailbox coordinates and unfold message
+        function openMailbox(event) {
+            const mailbox = document.getElementById('mailboxBox');
+            const mailboxIcon = document.getElementById('mailboxIcon');
+            
+            // Visual feedback on mailbox tap
+            mailboxIcon.innerText = "📬💥";
+            
+            // Get click coordinates to shoot custom explosive hearts
+            const rect = mailbox.getBoundingClientRect();
+            const startX = rect.left + rect.width / 2;
+            const startY = rect.top + rect.height / 2;
+            
+            const heartIcons = ['❤️', '💖', '💝', '💕', '✨', '🌸', '🥰'];
+            
+            // Generate a burst of 25 localized flying hearts out of the box
+            for (let i = 0; i < 25; i++) {
+                const burstHeart = document.createElement('div');
+                burstHeart.className = 'mailbox-heart';
+                burstHeart.innerText = heartIcons[Math.floor(Math.random() * heartIcons.length)];
+                
+                // Style positioning from origin mailbox center point
+                burstHeart.style.left = startX + 'px';
+                burstHeart.style.top = startY + 'px';
+                
+                // Random vector path destinations (Upward focus arc)
+                const targetX = (Math.random() - 0.5) * 350;
+                const targetY = -(Math.random() * 300 + 150);
+                const rotation = Math.random() * 360;
+                const scale = Math.random() * 0.8 + 0.8;
+                
+                burstHeart.style.setProperty('--tx', targetX + 'px');
+                burstHeart.style.setProperty('--ty', targetY + 'px');
+                burstHeart.style.setProperty('--rot', rotation + 'deg');
+                burstHeart.style.setProperty('--scale', scale);
+                
+                document.body.appendChild(burstHeart);
+                
+                // Cleanup nodes once animation drops off screen
+                setTimeout(() => burstHeart.remove(), 1200);
+            }
+            
+            // Switch mailbox state to opened wide
+            setTimeout(() => {
+                mailboxIcon.innerText = "📭";
+                // Continuous background celebration engine fire
+                triggerConfetti();
+            }, 300);
+
+            // Phase out mailbox layout gracefully and fade in actual birthday context
+            setTimeout(() => {
+                document.getElementById('mailboxIntro').style.fadeOut = "slow";
+                document.getElementById('mailboxIntro').style.display = "none";
+                
+                const mainBdayMsg = document.getElementById('bdayActualMessage');
+                mainBdayMsg.style.display = "block";
+                
+                // Micro delay triggers CSS Transition engine for fade-in effect
+                setTimeout(() => {
+                    mainBdayMsg.classList.add('show');
+                }, 50);
+            }, 1000);
+        }
+
+        function clickBurst(event) {
+            confetti({
+                particleCount: 20,
+                angle: 90,
+                spread: 45,
+                origin: { 
+                    x: event.clientX / window.innerWidth, 
+                    y: event.clientY / window.innerHeight 
+                },
+                colors: ['#ff4d6d', '#ff0055', '#ffd700']
+            });
         }
 
         function checkDate() {
-            if (document.getElementById('dateInput').value === "03-06-2026") {
-                nextStep(3);
+            if (document.getElementById('dateInput').value.trim() === "03-06-2026") {
+                nextStep('2b'); // Routes dynamically to your new heartfelt "Gurkha" frame
             } else {
                 alert("Incorrect! (Hint: 03-06-2026)");
             }
@@ -207,32 +616,32 @@
 
         function checkLove() {
             if (slider.value < 95) {
-                alert("Only " + slider.value + "%? Move it to 100! 😤");
+                alert("Only " + slider.value + "%? Move it closer to 100%! 😤❤️");
             } else {
                 nextStep('3b');
             }
         }
 
         function startCravingsRain() {
-            const items = ["🍗", "🍦", "🍗","🍨","🍨" ,"🍨", "❤️", "🍗", "🍦"];
-            for (let i = 0; i < 40; i++) {
+            const items = ["🍗", "🍦", "🍗", "🍨", "🍨", "❤️", "✨"];
+            for (let i = 0; i < 35; i++) {
                 setTimeout(() => {
                     const drop = document.createElement('div');
                     drop.innerText = items[Math.floor(Math.random() * items.length)];
                     drop.className = 'falling-item';
-                    drop.style.left = Math.random() * 100 + "vw";
-                    drop.style.animationDuration = (Math.random() * 2 + 2) + "s";
+                    drop.style.left = Math.random() * 90 + "vw";
+                    drop.style.animationDuration = (Math.random() * 1.5 + 1.5) + "s";
                     document.body.appendChild(drop);
                     setTimeout(() => drop.remove(), 3000);
-                }, i * 150);
+                }, i * 120);
             }
             setTimeout(() => {
-                if(confirm("Ready for your surprise now? 🎂")) nextStep(5);
+                nextStep(5);
             }, 3500);
         }
 
         function triggerConfetti() {
-            var duration = 5 * 1000;
+            var duration = 4 * 1000;
             var end = Date.now() + duration;
             (function frame() {
                 confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff85a2', '#ff4d6d', '#ffd700'] });
@@ -242,8 +651,8 @@
         }
 
         function celebrateAgain() {
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-            alert('Deal signed! I am waiting for your treat! ❤️');
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ff85a2', '#ff4d6d', '#ffd700'] });
+            alert('Deal signed! I am waiting for your grand treat! ❤️🍧');
         }
     </script>
 </body>
